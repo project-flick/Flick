@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -20,6 +22,12 @@ const Profile = () => {
     fetchUser();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -29,6 +37,7 @@ const Profile = () => {
       <h2>Profile</h2>
       <p>Username: {user.username}</p>
       <p>Email: {user.email}</p>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
