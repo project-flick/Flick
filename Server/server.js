@@ -10,10 +10,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect('MONGODBURL', { //change url or add it to .env file
+const dbURI = 'mongodb+srv://ryan:arafeh123@flick.6cx9yrs.mongodb.net/?retryWrites=true&w=majority&appName=Flick'; // replace with your MongoDB URI
+mongoose.connect(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
