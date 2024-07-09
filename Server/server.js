@@ -22,12 +22,16 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const authRoutes = require('./routes/auth');
+const likeRoutes = require('./routes/like');
+
 
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/likes', likeRoutes); 
+
 
 const port = process.env.PORT || 5050;
 
