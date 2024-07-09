@@ -1,15 +1,39 @@
 const Post = require('../models/Post');
+const multer = require('multer');
+const path = require('path');
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Create a new post
-exports.createPost = async (req, res) => {
-  try {
-    const newPost = new Post(req.body);
-    const savedPost = await newPost.save();
-    res.status(201).json(savedPost);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+exports.createPost = [
+  upload.single('image'),
+  async (req, res) => {
+    try {
+      const { content } = req.body;
+      const image = req.file ? req.file.filename : null;
+      const post = new Post({
+        userId: req.user.id,
+        content,
+        image,
+      });
+      await post.save();
+      res.status(201).json(post);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+];
+
 
 // Get all posts
 exports.getAllPosts = async (req, res) => {

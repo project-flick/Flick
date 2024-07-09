@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
     user = new User({
       username,
       email,
-      password
+      password,
     });
 
     // Hash password
@@ -29,15 +29,14 @@ exports.register = async (req, res) => {
     // Generate JWT token
     const payload = {
       user: {
-        id: user.id
-      }
+        id: user.id,
+      },
     };
 
     jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
       res.status(201).json({ token });
     });
-
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -61,15 +60,14 @@ exports.login = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.id
-      }
+        id: user.id,
+      },
     };
 
     jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
       res.status(200).json({ token });
     });
-
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
