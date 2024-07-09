@@ -4,7 +4,7 @@ const PostItem = ({ post }) => {
   return (
     <div>
       <h3>{post.content}</h3>
-      {post.image && <img src={post.image} alt="Post" />}
+      {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />}
       <p>By: {post.userId}</p>
     </div>
   );

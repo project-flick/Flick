@@ -3,19 +3,32 @@ import axios from 'axios';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
+
+  const handleFileChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('image', image);
+
     try {
-      await axios.post(
-        'http://localhost:5050/api/posts',
-        { content, image },
-        { headers: { 'x-auth-token': token } }
-      );
+      await axios.post('http://localhost:5050/api/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-auth-token': token,
+        },
+      });
       alert('Post created');
+      setContent('');
+      setImage(null);
     } catch (err) {
+      console.error(err);
       alert('Post creation failed');
     }
   };
@@ -31,10 +44,9 @@ const CreatePost = () => {
           required
         />
         <input
-          type="text"
-          placeholder="Image URL"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          type="file"
+          onChange={handleFileChange}
+          required
         />
         <button type="submit">Post</button>
       </form>
