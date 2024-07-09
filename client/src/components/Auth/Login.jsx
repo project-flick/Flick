@@ -15,7 +15,15 @@ const Login = () => {
         password,
       });
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+
+      // Fetch user details
+      const userRes = await axios.get('http://localhost:5050/api/auth/user', {
+        headers: {
+          'x-auth-token': res.data.token,
+        },
+      });
+      localStorage.setItem('user', JSON.stringify(userRes.data));
+      
       alert('Login successful');
       navigate('/');
     } catch (err) {

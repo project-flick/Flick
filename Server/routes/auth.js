@@ -13,4 +13,6 @@ router.get('/verify', AuthController.verifyToken, (req, res) => {
   res.status(200).json({ message: 'Token is valid' });
 });
 
+router.get('/user', auth, authController.getUser);
+
 module.exports = router;
