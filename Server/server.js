@@ -2,12 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
 const dbURI = 'mongodb+srv://ryan:arafeh123@flick.6cx9yrs.mongodb.net/?retryWrites=true&w=majority&appName=Flick'; // replace with your MongoDB URI
