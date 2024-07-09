@@ -76,7 +76,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Verify token (this can be a separate middleware or a simple route)
+// Verify token 
 exports.verifyToken = (req, res) => {
   res.status(200).json({ message: 'Token is valid' });
 };
