@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/authController');
+const auth = require('../middleware/auth');
 
 // Register a new user
 router.post('/register', AuthController.register);
