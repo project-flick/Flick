@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    cb(null, Date.now() + path.extname(file.originalname)); // Append the file extension
   },
 });
 
@@ -38,7 +38,7 @@ exports.createPost = [
 // Get all posts
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate('userId', 'username');
     res.status(200).json(posts);
   } catch (err) {
     res.status(400).json({ message: err.message });
