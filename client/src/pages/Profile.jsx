@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [pwd, setPwd] = useState({password: "", cpassword: ""});
+  const [editProfile, setEditProfile] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,16 +31,42 @@ const Profile = () => {
     navigate('/login');
   };
 
+  const saveProfile = () => {
+    // Make request to save profile here.
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
+      <hr/>
       <h2>Profile</h2>
-      <p>Username: {user.username}</p>
+      <hr/>
+      
       <p>Email: {user.email}</p>
-      <button onClick={handleLogout}>Logout</button>
+      <p>Username: 
+        {editProfile && <input type="text" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>}
+        {!editProfile && <>{user.username}</>}
+      </p>
+
+      {editProfile && 
+      <>
+        <h3>Change password</h3>
+        <p>New password</p>
+        <input type="password" value={pwd.password} onChange={e => setPwd({...pwd, password: e.target.value})}/>
+        <p>Confirm password</p>
+        <input type="password" value={pwd.cpassword} onChange={e => setPwd({...pwd, cpassword: e.target.value})}/>
+        <br/><br/>
+      </>
+      }
+
+      <div>
+        {!editProfile && <button onClick={e => setEditProfile(true)}>Edit Profile</button>}
+        {editProfile && <button onClick={e => saveProfile()}>Save Changes</button>}
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 };
