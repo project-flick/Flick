@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import EditPost from './components/Posts/EditPost';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/edit/:id" element={<EditPost />} />
         </Routes>
       </div>
     </Router>
