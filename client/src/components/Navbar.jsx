@@ -1,9 +1,13 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../images/logo.jpg';
+import React, { useEffect, useState } from 'react';
 
 const Navbar = () => {
-  const token = localStorage.getItem('token');
+  const [hasToken, setHasToken] = useState(localStorage.getItem('token') !== null);
+
+  useEffect(() => {
+    setHasToken(localStorage.getItem('token') !== null)
+  }, [localStorage.getItem('token')]);
 
   return (
     <nav>
@@ -11,7 +15,7 @@ const Navbar = () => {
         <img className="logo" src={logo} alt="Flick logo"/>
       </h1>
       <ul>
-        {token ? (
+        {hasToken ? (
           <>
             <li>
               <Link to="/">Home</Link>

@@ -57,6 +57,38 @@ a {
     }
 }
 
+form {
+    input {
+        display: block;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        padding: 10px;
+        min-width: 190px;
+        outline: none;
+        border: 1px solid black;
+        transition: box-shadow 0.2s;
+    
+        &:focus {
+            box-shadow: 0 0 1px 4px rgba(0,0,0,0.2);
+        }
+    }
+
+    button {
+        margin-top: 5px;
+        border-radius: 5px;
+        outline: none;
+        background-color: black;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #333;
+        }
+    }
+}
+
 .copyright {
     font-size: 14px;
     color: #888;
