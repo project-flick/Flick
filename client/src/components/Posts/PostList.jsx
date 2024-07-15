@@ -21,7 +21,7 @@ const PostList = () => {
 
   return (
     <div>
-      <h2>Posts</h2>
+      <h2 className="page-title">Posts</h2>
       {posts.map((post) => (
         <PostItem key={post._id} post={post} />
       ))}

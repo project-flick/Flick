@@ -23,6 +23,11 @@ a {
     margin: -12px 0 -30px 0;
 }
 
+.page-title {
+    font-size: clamp(24px, 5vw, 38px);
+    margin-bottom: 25px;
+}
+
 .App {
     position: relative;
     display: flex;
@@ -57,35 +62,38 @@ a {
     }
 }
 
-form {
-    input {
-        display: block;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        padding: 10px;
-        min-width: 190px;
-        outline: none;
-        border: 1px solid black;
-        transition: box-shadow 0.2s;
-    
-        &:focus {
-            box-shadow: 0 0 1px 4px rgba(0,0,0,0.2);
-        }
+button, input {
+    font-size: 14px;
+}
+
+input {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 190px;
+    outline: none;
+    border: 1px solid black;
+    transition: box-shadow 0.2s;
+
+    &:focus {
+        box-shadow: 0 0 1px 4px rgba(0,0,0,0.2);
     }
+}
 
-    button {
-        margin-top: 5px;
-        border-radius: 5px;
-        outline: none;
-        background-color: black;
-        color: white;
-        padding: 10px;
-        border: none;
-        cursor: pointer;
+button {
+    margin-top: 5px;
+    margin-right: 10px;
+    border-radius: 5px;
+    outline: none;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
 
-        &:hover {
-            background-color: #333;
-        }
+    &:hover {
+        background-color: #333;
     }
 }
 

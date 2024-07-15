@@ -41,15 +41,26 @@ const Profile = () => {
 
   return (
     <div>
-      <hr/>
-      <h2>Profile</h2>
-      <hr/>
+      <h2 className="page-title">Profile</h2>
       
-      <p>Email: {user.email}</p>
-      <p>Username: 
-        {editProfile && <input type="text" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>}
-        {!editProfile && <>{user.username}</>}
-      </p>
+      <table>
+        <tbody>
+          <tr>
+            <td>Email</td>
+            <td>{user.email}</td>
+          </tr>
+
+          <tr>
+            <td>Username</td>
+            <td>
+              {editProfile && <input type="text" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>}
+              {!editProfile && <>{user.username}</>}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <br/>
 
       {editProfile && 
       <>
@@ -58,7 +69,6 @@ const Profile = () => {
         <input type="password" value={pwd.password} onChange={e => setPwd({...pwd, password: e.target.value})}/>
         <p>Confirm password</p>
         <input type="password" value={pwd.cpassword} onChange={e => setPwd({...pwd, cpassword: e.target.value})}/>
-        <br/><br/>
       </>
       }
 

@@ -35,7 +35,7 @@ const CreatePost = () => {
 
   return (
     <div>
-      <h2>Create Post</h2>
+      <h2 className="page-title">Create Post</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           placeholder="What's on your mind?"

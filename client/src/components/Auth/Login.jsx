@@ -23,8 +23,6 @@ const Login = () => {
         },
       });
       localStorage.setItem('user', JSON.stringify(userRes.data));
-      
-      alert('Login successful');
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -34,7 +32,7 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2 className="page-title">Login</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"

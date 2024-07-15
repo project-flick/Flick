@@ -43,7 +43,7 @@ const EditPost = () => {
 
   return (
     <div>
-      <h2>Edit Post</h2>
+      <h2 className="page-title">Edit Post</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           placeholder="Edit your post"
