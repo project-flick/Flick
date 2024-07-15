@@ -7,6 +7,7 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import EditPost from './components/Posts/EditPost';
 import './App.css';
+import './style.scss';
 
 function App() {
   return (

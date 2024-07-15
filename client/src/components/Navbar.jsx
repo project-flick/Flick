@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../images/logo.jpg';
 
 const Navbar = () => {
   const token = localStorage.getItem('token');
 
   return (
     <nav>
-      <h1>Flick</h1>
+      <h1>
+        <img className="logo" src={logo} alt="Flick logo"/>
+      </h1>
       <ul>
         {token ? (
           <>
@@ -28,6 +31,8 @@ const Navbar = () => {
           </>
         )}
       </ul>
+
+      <p className="copyright">&copy; Flick 2024</p>
     </nav>
   );
 };
