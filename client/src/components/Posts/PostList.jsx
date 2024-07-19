@@ -6,15 +6,16 @@ const PostList = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchPosts = () => {
+    const fetchPosts = async () => {
       const token = localStorage.getItem('token');
-      const res = axios.get('http://localhost:5050/api/posts', {
-        headers: { 'x-auth-token': token },
-      }).then(data => data.json()).then((json) => {
-        setPosts(json.data);
-      }).catch((err) => {
+      try {
+        const res = await axios.get('http://localhost:5050/api/posts', {
+          headers: { 'x-auth-token': token },
+        });
+        setPosts(res.data);
+      } catch (err) {
         console.log("Auth token invalid or not found");
-      });
+      }
     };
     fetchPosts();
   }, []);
