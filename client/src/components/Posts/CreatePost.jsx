@@ -18,7 +18,7 @@ const CreatePost = () => {
     formData.append('image', image);
 
     try {
-      await axios.post('http://localhost:5050/api/posts', formData, {
+      const response = await axios.post('http://localhost:5050/api/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
@@ -27,8 +27,9 @@ const CreatePost = () => {
       alert('Post created');
       setContent('');
       setImage(null);
+      console.log(response.data);
     } catch (err) {
-      console.error(err);
+      console.error('Error details:', err.response || err.message || err);
       alert('Post creation failed');
     }
   };
