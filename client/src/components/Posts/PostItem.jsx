@@ -4,6 +4,11 @@ import axios from 'axios';
 
 const PostItem = ({ post }) => {
   const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+
+  // Debugging log
+  console.log('Post userId:', post.userId._id);
+  console.log('Current userId:', userId);
 
   const handleDelete = async () => {
     try {
@@ -25,8 +30,12 @@ const PostItem = ({ post }) => {
       <h3>{post.content}</h3>
       {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />}
       <p>By: {post.userId.username}</p>
-      <Link to={`/edit/${post._id}`}>Edit</Link>
-      <button onClick={handleDelete}>Delete</button>
+      {post.userId._id.toString() === userId && (
+        <>
+          <Link to={`/edit/${post._id}`}>Edit</Link>
+          <button onClick={handleDelete}>Delete</button>
+        </>
+      )}
     </div>
   );
 };
