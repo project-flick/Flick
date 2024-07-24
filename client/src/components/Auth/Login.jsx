@@ -10,29 +10,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5050/api/auth/login', {
-        email,
-        password,
-      });
+      const res = await axios.post('http://localhost:5050/api/auth/login', { email, password });
+      console.log('Login response:', res.data);
       localStorage.setItem('token', res.data.token);
-
-      // Fetch user details
-      const userRes = await axios.get('http://localhost:5050/api/auth/user', {
-        headers: {
-          'x-auth-token': res.data.token,
-        },
-      });
-      localStorage.setItem('user', JSON.stringify(userRes.data));
-      navigate('/');
+      localStorage.setItem('userId', res.data.user._id); // Ensure user ID is stored correctly
+      navigate('/profile');
     } catch (err) {
-      console.error(err);
-      alert('Login failed');
+      console.error('Login Error:', err.response ? err.response.data : err.message);
+      alert(`Login failed: ${err.response ? err.response.data.message : err.message}`);
     }
   };
 
   return (
     <div>
-      <h2 className="page-title">Login</h2>
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
