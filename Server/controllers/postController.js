@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Append the file extension
+    cb(null, Date.now() + path.extname(file.originalname)); 
   },
 });
 
@@ -33,7 +33,6 @@ exports.createPost = [
     }
   },
 ];
-
 
 // Get all posts
 exports.getAllPosts = async (req, res) => {
