@@ -1,7 +1,6 @@
 const Like = require('../models/Like');
 const Post = require('../models/Post');
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+const User = require('../models/User');
 
 // Like a post
 exports.likePost = async (req, res) => {
@@ -9,20 +8,19 @@ exports.likePost = async (req, res) => {
     const { postId } = req.body;
     const userId = req.user.id;
 
-    if (!ObjectId.isValid(postId)) {
-      return res.status(400).json({ message: 'Invalid post ID' });
+    // Check if the post exists
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Check if the user already liked the post
+    if (post.likes.includes(userId)) {
+      return res.status(400).json({ message: 'User already liked this post' });
     }
 
-    const existingLike = await Like.findOne({ postId, userId });
-    if (existingLike) return res.status(400).json({ message: 'Post already liked' });
+    post.likes.push(userId);
+    await post.save();
 
-    const newLike = new Like({ postId, userId });
-    await newLike.save();
-
-    // Optionally update the post's like count
-    await Post.findByIdAndUpdate(postId, { $inc: { likes: 1 } });
-
-    res.status(201).json(newLike);
+    res.status(201).json(post);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -31,35 +29,27 @@ exports.likePost = async (req, res) => {
 // Unlike a post
 exports.unlikePost = async (req, res) => {
   try {
-    const { postId } = req.params;
+    const { postId } = req.body;
     const userId = req.user.id;
 
-    if (!ObjectId.isValid(postId)) {
-      return res.status(400).json({ message: 'Invalid post ID' });
-    }
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    const like = await Like.findOneAndDelete({ postId, userId });
-    if (!like) return res.status(404).json({ message: 'Like not found' });
+    post.likes = post.likes.filter(id => id.toString() !== userId);
+    await post.save();
 
-    // Optionally update the post's like count
-    await Post.findByIdAndUpdate(postId, { $inc: { likes: -1 } });
-
-    res.status(200).json({ message: 'Post unliked' });
+    res.status(200).json(post);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-// Get all likes for a post
-exports.getLikes = async (req, res) => {
+// Get likes of a post
+exports.getLikesByPost = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    if (!ObjectId.isValid(postId)) {
-      return res.status(400).json({ message: 'Invalid post ID' });
-    }
-
-    const likes = await Like.find({ postId });
+    const likes = await Like.find({ postId }).populate('userId', 'username');
     res.status(200).json(likes);
   } catch (err) {
     res.status(400).json({ message: err.message });

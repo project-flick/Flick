@@ -11,10 +11,10 @@ exports.createComment = async (req, res) => {
   }
 };
 
-// Get all comments
-exports.getAllComments = async (req, res) => {
+// Get all comments for a post
+exports.getCommentsByPostId = async (req, res) => {
   try {
-    const comments = await Comment.find();
+    const comments = await Comment.find({ postId: req.params.postId });
     res.status(200).json(comments);
   } catch (err) {
     res.status(400).json({ message: err.message });

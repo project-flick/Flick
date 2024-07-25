@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -58,12 +58,8 @@ exports.getPostById = async (req, res) => {
 // Update a post
 exports.updatePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
-    if (post.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'User not authorized to edit this post' });
-    }
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedPost) return res.status(404).json({ message: 'Post not found' });
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -73,13 +69,59 @@ exports.updatePost = async (req, res) => {
 // Delete a post
 exports.deletePost = async (req, res) => {
   try {
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    if (!deletedPost) return res.status(404).json({ message: 'Post not found' });
+    res.status(200).json({ message: 'Post deleted' });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Like a post
+exports.likePost = async (req, res) => {
+  try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
-    if (post.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'User not authorized to delete this post' });
+
+    // Check if the post is already liked by the user
+    if (post.likes.includes(req.user.id)) {
+      return res.status(400).json({ message: 'Post already liked' });
     }
-    await Post.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Post deleted' });
+
+    post.likes.push(req.user.id);
+    await post.save();
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Unlike a post
+exports.unlikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Check if the post is liked by the user
+    if (!post.likes.includes(req.user.id)) {
+      return res.status(400).json({ message: 'Post has not yet been liked' });
+    }
+
+    post.likes = post.likes.filter(like => like.toString() !== req.user.id);
+    await post.save();
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Get likes for a post
+exports.getPostLikes = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate('likes', 'username');
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    res.status(200).json(post.likes);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
