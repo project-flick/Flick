@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Comments from './Comments';
-import Modal from './LikeModal/LikeModal';
+import Comments from './Comments/Comments';
+import Modal from './Likes/LikeModal';
 import './PostItem.scss';
 
 const PostItem = ({ post }) => {

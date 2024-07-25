@@ -3,7 +3,11 @@ const Comment = require('../models/Comment');
 // Create a new comment
 exports.createComment = async (req, res) => {
   try {
-    const newComment = new Comment(req.body);
+    const newComment = new Comment({
+      userId: req.body.userId,
+      postId: req.body.postId,
+      text: req.body.text
+    });
     const savedComment = await newComment.save();
     res.status(201).json(savedComment);
   } catch (err) {
@@ -14,7 +18,7 @@ exports.createComment = async (req, res) => {
 // Get all comments for a post
 exports.getCommentsByPostId = async (req, res) => {
   try {
-    const comments = await Comment.find({ postId: req.params.postId });
+    const comments = await Comment.find({ postId: req.params.postId }).populate('userId', 'username');
     res.status(200).json(comments);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -24,7 +28,7 @@ exports.getCommentsByPostId = async (req, res) => {
 // Get a comment by ID
 exports.getCommentById = async (req, res) => {
   try {
-    const comment = await Comment.findById(req.params.id);
+    const comment = await Comment.findById(req.params.id).populate('userId', 'username');
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
     res.status(200).json(comment);
   } catch (err) {
@@ -35,7 +39,7 @@ exports.getCommentById = async (req, res) => {
 // Update a comment
 exports.updateComment = async (req, res) => {
   try {
-    const updatedComment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedComment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('userId', 'username');
     if (!updatedComment) return res.status(404).json({ message: 'Comment not found' });
     res.status(200).json(updatedComment);
   } catch (err) {
