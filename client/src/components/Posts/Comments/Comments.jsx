@@ -6,19 +6,19 @@ const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5050/api/comments/post/${postId}`, {
-          headers: { 'x-auth-token': token },
-        });
-        setComments(res.data);
-      } catch (err) {
-        console.error('Error fetching comments:', err);
-      }
-    };
+  const fetchComments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get(`http://localhost:5050/api/comments/post/${postId}`, {
+        headers: { 'x-auth-token': token },
+      });
+      setComments(res.data);
+    } catch (err) {
+      console.error('Error fetching comments:', err);
+    }
+  };
 
+  useEffect(() => {
     fetchComments();
   }, [postId]);
 
@@ -36,6 +36,7 @@ const Comments = ({ postId }) => {
       });
       setComments([...comments, res.data]);
       setCommentText('');
+      fetchComments(); // Trigger re-fetching comments
     } catch (err) {
       console.error('Error posting comment:', err);
     }
