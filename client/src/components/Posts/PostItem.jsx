@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Comments from './Comments';
 import Modal from './LikeModal/LikeModal';
+import './PostItem.scss';
 
 const PostItem = ({ post }) => {
   const [likes, setLikes] = useState(post.likes.length);
@@ -78,27 +79,43 @@ const PostItem = ({ post }) => {
   };
 
   return (
-    <div>
-      <h3>{post.content}</h3>
-      {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />}
-      <p>By: {post.userId.username}</p>
-      <button onClick={handleToggleLike}>{userHasLiked ? 'Unlike' : 'Like'}</button>
-      <button onClick={toggleShowLikes}>View Likes ({likes})</button>
+    <div className="post">
+      <div className="post-header">
+        <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
+        <p className="post-username">{post.userId.username}</p>
+      </div>
+      {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" className="post-image" />}
+      <div className="post-content">
+        <p>{post.content}</p>
+        <div className="post-actions">
+          <button onClick={handleToggleLike} className="post-like">
+            {userHasLiked ? 'Unlike' : 'Like'}
+          </button>
+          <button onClick={toggleShowLikes} className="post-view-likes">
+            View Likes ({likes})
+          </button>
+          {post.userId._id === currentUserId && (
+            <>
+              <Link to={`/edit/${post._id}`} className="post-edit">Edit</Link>
+              <button onClick={handleDelete} className="post-delete">Delete</button>
+            </>
+          )}
+        </div>
+        <Comments postId={post._id} />
+      </div>
       {showLikes && (
         <Modal onClose={toggleShowLikes}>
-          <h4>Liked by:</h4>
-          {likesList.map((like) => (
-            <p key={like._id}>{like.userId.username}</p>
-          ))}
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4>Liked by:</h4>
+              <button onClick={toggleShowLikes} className="modal-close">&times;</button>
+            </div>
+            {likesList.map((like) => (
+              <p key={like._id}>{like.userId.username}</p>
+            ))}
+          </div>
         </Modal>
       )}
-      {post.userId._id === currentUserId && (
-        <>
-          <Link to={`/edit/${post._id}`}>Edit</Link>
-          <button onClick={handleDelete}>Delete</button>
-        </>
-      )}
-      <Comments postId={post._id} />
     </div>
   );
 };
