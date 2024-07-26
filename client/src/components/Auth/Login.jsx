@@ -25,20 +25,20 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-left">
         <div className="auth-left-content">
-          <h1>Sign in to</h1>
-          <p>Lorem Ipsum is simply</p>
-          <p>If you don't have an account register</p>
-          <Link to="/register" className="register-link">Register here !</Link>
+          <h1>Welcome Back!</h1>
+          <p>Sign in to access your account.</p>
+          <p>Don't have an account?</p>
+          <Link to="/register" className="auth-link">Sign up here!</Link>
         </div>
       </div>
       <div className="auth-right">
         <form onSubmit={handleSubmit} className="auth-form">
-          <h2>Sign in</h2>
+          <h2>Sign In</h2>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email"
+            placeholder="Enter email or username"
             required
           />
           <input

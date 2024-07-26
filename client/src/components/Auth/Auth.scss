@@ -1,132 +1,131 @@
 .auth-container {
   display: flex;
   height: 100vh;
-  background-color: #f0f2f5;
-}
 
-.auth-left,
-.auth-right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 50px;
-}
-
-.auth-form {
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 100%;
-  max-width: 400px;
-
-  h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-
-  input {
-    width: 100%;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    outline: none;
-    transition: box-shadow 0.2s;
-
-    &:focus {
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-  }
-
-  button {
-    width: 100%;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #6c63ff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #5a52d4;
-    }
-  }
-
-  p {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
-  }
-
-  .social-login {
+  .auth-left, .auth-right {
+    flex: 1;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 15px;
+    align-items: center;
+    padding: 20px;
+  }
 
-    i {
-      font-size: 24px;
-      color: #6c63ff;
+  .auth-left {
+    background-color: #f7f7f7;
+    animation: slideInLeft 0.5s forwards;
+  }
+
+  .auth-right {
+    background-color: #ffffff;
+    animation: slideInRight 0.5s forwards;
+  }
+
+  .auth-form {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      box-sizing: border-box; 
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background-color 0.3s;
+      box-sizing: border-box; 
 
       &:hover {
-        color: #5a52d4;
+        background: #0056b3;
+      }
+    }
+
+    .social-login {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+
+      i {
+        font-size: 1.5rem;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: color 0.3s;
+
+        &:hover {
+          color: #007bff;
+        }
+      }
+    }
+  }
+
+  .auth-right-content, .auth-left-content {
+    text-align: left;
+    max-width: 400px;
+    width: 100%;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .auth-link {
+      font-size: 1.1rem;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: #0056b3;
       }
     }
   }
 }
 
-.auth-right-content {
-  text-align: left;
-
-  h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
   }
-
-  p {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .register-link {
-    color: #007bff;
-    font-weight: bold;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
-.auth-left-content {
-  text-align: left;
-
-  h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
-
-  p {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .login-link {
-    color: #007bff;
-    font-weight: bold;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

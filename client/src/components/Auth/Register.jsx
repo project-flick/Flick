@@ -23,9 +23,17 @@ const Register = () => {
 
   return (
     <div className="auth-container">
+      <div className="auth-right">
+        <div className="auth-right-content">
+          <h1>Join Us!</h1>
+          <p>Create an account to get started.</p>
+          <p>Already have an account?</p>
+          <Link to="/login" className="auth-link">Sign in here!</Link>
+        </div>
+      </div>
       <div className="auth-left">
         <form onSubmit={handleSubmit} className="auth-form">
-          <h2>Sign up</h2>
+          <h2>Sign Up</h2>
           <input
             type="text"
             value={username}
@@ -49,14 +57,6 @@ const Register = () => {
           />
           <button type="submit">Sign Up</button>
         </form>
-      </div>
-      <div className="auth-right">
-        <div className="auth-right-content">
-          <h1>Join us</h1>
-          <p>Lorem Ipsum is simply</p>
-          <p>If you already have an account</p>
-          <Link to="/login" className="login-link">Sign in here !</Link>
-        </div>
       </div>
     </div>
   );
