@@ -2,55 +2,78 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './CreatePost.scss';
 
-const CreatePost = () => {
+const CreatePost = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
-
-  const handleFileChange = (e) => {
-    setImage(e.target.files[0]);
-  };
+  const [preview, setPreview] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-
     const formData = new FormData();
     formData.append('content', content);
     formData.append('image', image);
 
     try {
+      const token = localStorage.getItem('token');
       await axios.post('http://localhost:5050/api/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
         },
       });
-      alert('Post created');
       setContent('');
       setImage(null);
-      window.location.reload(); // Reload to show the new post without manual refresh
+      setPreview(null);
+      if (onPostCreated) {
+        onPostCreated();
+      }
     } catch (err) {
-      console.error(err);
-      alert('Post creation failed');
+      console.error('Error creating post:', err);
+      alert('Failed to create post');
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   return (
     <div className="create-post">
-      <h2 className="page-title">Create Post</h2>
       <form onSubmit={handleSubmit}>
-        <textarea
-          placeholder="What's on your mind?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
-        <input
-          type="file"
-          onChange={handleFileChange}
-          required
-        />
-        <button type="submit">Post</button>
+        <div className="create-post-input">
+          <img
+            src="http://localhost:5050/uploads/default-profile.png"
+            alt="Profile"
+            className="profile-pic"
+          />
+          <input
+            type="text"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's on your mind?"
+            required
+          />
+          <button type="submit" className="post-button">Post</button>
+        </div>
+        {preview && (
+          <div className="image-preview">
+            <img src={preview} alt="Preview" />
+          </div>
+        )}
+        <div className="create-post-actions">
+          <label className="action-button">
+            <input type="file" onChange={handleImageChange} />
+            <i className="fas fa-image"></i> Photo
+          </label>
+        </div>
       </form>
     </div>
   );

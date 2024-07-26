@@ -11,9 +11,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5050/api/auth/login', { email, password });
+      const res = await axios.post('http://localhost:5050/api/auth/login', {
+        email,
+        password,
+      });
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('userId', res.data.userId);
+      localStorage.setItem('userId', res.data.user._id);
       navigate('/');
     } catch (err) {
       console.error('Login Error:', err);
