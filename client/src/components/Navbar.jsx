@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import logo from '../images/logo.jpg';
 import React, { useEffect, useState } from 'react';
+import './Navbar.scss';
 
 const Navbar = () => {
   const [hasToken, setHasToken] = useState(localStorage.getItem('token') !== null);
