@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import logo from '../images/logo.jpg';
+// import logo from '../images/logo.jpg';
+import logo from '../images/logo.png';
 import React, { useEffect, useState } from 'react';
 import './Navbar.scss';
 
@@ -12,9 +13,9 @@ const Navbar = () => {
 
   return (
     <nav>
-      {/* <h1>
+      <div className="logo-container">
         <img className="logo" src={logo} alt="Flick logo"/>
-      </h1> */}
+      </div>
       <ul>
         {hasToken ? (
           <>
