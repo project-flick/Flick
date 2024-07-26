@@ -18,10 +18,13 @@ const PostList = () => {
   }, []);
 
   return (
-    <div className="posts-list">
-      {posts.map((post) => (
-        <PostItem key={post._id} post={post} />
-      ))}
+    <div className="posts-container">
+      <h2 className="page-title">Posts</h2>
+      <div className="posts-list">
+        {posts.map((post) => (
+          <PostItem key={post._id} post={post} />
+        ))}
+      </div>
     </div>
   );
 };
