@@ -20,6 +20,9 @@ function App() {
           <Route path="/profile" element={<PrivateRoute element={Profile} />} />
           <Route path="/edit/:id" element={<PrivateRoute element={EditPost} />} />
         </Routes>
+        <footer>
+          &copy; Flick 2024
+        </footer>
       </div>
     </Router>
   );
