@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Comments from './Comments/Comments';
 import Modal from './Likes/LikeModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './PostItem.scss';
 
 const PostItem = ({ post }) => {
@@ -84,23 +82,26 @@ const PostItem = ({ post }) => {
     <div className="post">
       <div className="post-header">
         <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
-        <p className="post-username">{post.userId.username}</p>
-        {post.userId._id === currentUserId && (
-          <div className="post-actions">
-            <Link to={`/edit/${post._id}`} className="post-edit">
-              <FontAwesomeIcon icon={faEdit} />
-            </Link>
-            <button onClick={handleDelete} className="post-delete">
-              <FontAwesomeIcon icon={faTrashAlt} />
-            </button>
-          </div>
-        )}
+        <div className="post-header-details">
+          <p className="post-username">{post.userId.username}</p>
+          {post.userId._id === currentUserId && (
+            <div className="post-actions">
+              <Link to={`/edit/${post._id}`} className="post-edit">
+                <i className="fas fa-edit"></i>
+              </Link>
+              <button onClick={handleDelete} className="post-delete">
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" className="post-image" />}
       <div className="post-content">
         <p>{post.content}</p>
         <div className="post-actions">
           <button onClick={handleToggleLike} className="post-like">
+            <i className={`fas fa-heart${userHasLiked ? ' liked' : ''}`}></i>
             {userHasLiked ? 'Unlike' : 'Like'}
           </button>
           <button onClick={toggleShowLikes} className="post-view-likes">

@@ -7,6 +7,7 @@ import Register from './components/Auth/Register';
 import EditPost from './components/Posts/EditPost';
 import PrivateRoute from './components/PrivateRoute';
 import './style.scss';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   return (
