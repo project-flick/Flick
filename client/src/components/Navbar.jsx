@@ -12,9 +12,9 @@ const Navbar = () => {
 
   return (
     <nav>
-      <h1>
+      {/* <h1>
         <img className="logo" src={logo} alt="Flick logo"/>
-      </h1>
+      </h1> */}
       <ul>
         {hasToken ? (
           <>
@@ -23,6 +23,9 @@ const Navbar = () => {
             </li>
             <li>
               <Link to="/profile">Profile</Link>
+            </li>
+            <li>
+              <Link to="/">Friends</Link>
             </li>
           </>
         ) : (
