@@ -11,13 +11,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5050/api/auth/login', { email, password });
-      console.log('Login response:', res.data);
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('userId', res.data.user._id); 
-      navigate('/profile');
+      localStorage.setItem('userId', res.data.userId); // Store userId for later use
+      navigate('/');
     } catch (err) {
-      console.error('Login Error:', err.response ? err.response.data : err.message);
-      alert(`Login failed: ${err.response ? err.response.data.message : err.message}`);
+      console.error('Login Error:', err);
+      alert('Failed to login');
     }
   };
 
@@ -27,16 +26,16 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
           required
         />
         <input
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
           required
         />
         <button type="submit">Login</button>
