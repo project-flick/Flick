@@ -58,8 +58,9 @@ const Comments = ({ postId }) => {
           onChange={(e) => setCommentText(e.target.value)}
           placeholder="Add a comment..."
           required
+          className="comment-input"
         />
-        <button type="submit">Post</button>
+        <button type="submit" className="comment-post-button">Post</button>
       </form>
     </div>
   );

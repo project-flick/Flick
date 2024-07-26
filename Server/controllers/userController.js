@@ -38,10 +38,23 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// Get user profile
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Update a user
 exports.updateUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id; 
     if (!ObjectId.isValid(userId)) {
       return res.status(400).json({ message: 'Invalid user ID' });
     }
@@ -56,7 +69,7 @@ exports.updateUser = async (req, res) => {
 // Delete a user
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id; 
     if (!ObjectId.isValid(userId)) {
       return res.status(400).json({ message: 'Invalid user ID' });
     }

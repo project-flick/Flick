@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PostItem from './PostItem';
+import './PostList.scss';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -17,8 +18,7 @@ const PostList = () => {
   }, []);
 
   return (
-    <div>
-      <h2 className="page-title">Posts</h2>
+    <div className="posts-list">
       {posts.map((post) => (
         <PostItem key={post._id} post={post} />
       ))}

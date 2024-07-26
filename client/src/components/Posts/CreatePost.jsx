@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './CreatePost.scss';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
@@ -18,7 +19,7 @@ const CreatePost = () => {
     formData.append('image', image);
 
     try {
-      const response = await axios.post('http://localhost:5050/api/posts', formData, {
+      await axios.post('http://localhost:5050/api/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
@@ -27,15 +28,15 @@ const CreatePost = () => {
       alert('Post created');
       setContent('');
       setImage(null);
-      console.log(response.data);
+      window.location.reload(); // Reload to show the new post without manual refresh
     } catch (err) {
-      console.error('Error details:', err.response || err.message || err);
+      console.error(err);
       alert('Post creation failed');
     }
   };
 
   return (
-    <div>
+    <div className="create-post">
       <h2 className="page-title">Create Post</h2>
       <form onSubmit={handleSubmit}>
         <textarea

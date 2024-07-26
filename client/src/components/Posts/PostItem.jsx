@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Comments from './Comments/Comments';
 import Modal from './Likes/LikeModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './PostItem.scss';
 
 const PostItem = ({ post }) => {
@@ -83,6 +85,16 @@ const PostItem = ({ post }) => {
       <div className="post-header">
         <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
         <p className="post-username">{post.userId.username}</p>
+        {post.userId._id === currentUserId && (
+          <div className="post-actions">
+            <Link to={`/edit/${post._id}`} className="post-edit">
+              <FontAwesomeIcon icon={faEdit} />
+            </Link>
+            <button onClick={handleDelete} className="post-delete">
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </button>
+          </div>
+        )}
       </div>
       {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" className="post-image" />}
       <div className="post-content">
@@ -94,12 +106,6 @@ const PostItem = ({ post }) => {
           <button onClick={toggleShowLikes} className="post-view-likes">
             View Likes ({likes})
           </button>
-          {post.userId._id === currentUserId && (
-            <>
-              <Link to={`/edit/${post._id}`} className="post-edit">Edit</Link>
-              <button onClick={handleDelete} className="post-delete">Delete</button>
-            </>
-          )}
         </div>
         <Comments postId={post._id} />
       </div>

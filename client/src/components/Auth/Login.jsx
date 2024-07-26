@@ -13,7 +13,7 @@ const Login = () => {
       const res = await axios.post('http://localhost:5050/api/auth/login', { email, password });
       console.log('Login response:', res.data);
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('userId', res.data.user._id); // Ensure user ID is stored correctly
+      localStorage.setItem('userId', res.data.user._id); 
       navigate('/profile');
     } catch (err) {
       console.error('Login Error:', err.response ? err.response.data : err.message);

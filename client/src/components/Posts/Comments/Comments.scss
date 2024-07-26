@@ -1,0 +1,39 @@
+.comments {
+    padding: 14px;
+  }
+  
+  .comments-list {
+    margin-bottom: 10px;
+  }
+  
+  .comment {
+    margin-bottom: 10px;
+  }
+  
+  .comment-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .comment-input {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+  }
+  
+  .comment-post-button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  
+  .comment-post-button:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+  }
