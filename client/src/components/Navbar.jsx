@@ -39,8 +39,6 @@ const Navbar = () => {
           </>
         )}
       </ul>
-
-      <p className="copyright">&copy; Flick 2024</p>
     </nav>
   );
 };
