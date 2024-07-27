@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import logo from '../../images/logo.jpeg';
 import './Auth.scss';
 
 const Login = () => {
@@ -28,6 +29,7 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-left">
         <div className="auth-left-content">
+          <img src={logo} className="logo"/>
           <h1>Welcome Back!</h1>
           <p>Sign in to access your account.</p>
           <p>Don't have an account?</p>

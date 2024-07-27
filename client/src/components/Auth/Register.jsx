@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import logo from '../../images/logo.jpeg';
 import './Auth.scss';
 
 const Register = () => {
@@ -25,6 +26,7 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-right">
         <div className="auth-right-content">
+          <img src={logo} className="logo"/>
           <h1>Join Us!</h1>
           <p>Create an account to get started.</p>
           <p>Already have an account?</p>
