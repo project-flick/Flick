@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -73,7 +75,7 @@ const Profile = () => {
   return (
     <div>
       <h2 className="page-title">Profile</h2>
-
+      <Navbar/>
       <table>
         <tbody>
           <tr>
