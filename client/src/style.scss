@@ -25,6 +25,12 @@ body {
     font-size: clamp(24px, 5vw, 38px);
     margin-bottom: 25px;
   }
+
+.pp-default {
+  background-color: #eee;
+  border-radius: 100px 100px;
+  padding: 5px;
+}
   
     footer {
       position: relative;

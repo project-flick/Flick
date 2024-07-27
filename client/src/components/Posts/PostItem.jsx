@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import defaultPP from '../../images/pp.png';
 import axios from 'axios';
 import Comments from './Comments/Comments';
 import Modal from './Likes/LikeModal';
@@ -81,7 +82,8 @@ const PostItem = ({ post }) => {
   return (
     <div className="post">
       <div className="post-header">
-        <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
+        {post.userId.profilePic && <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />}
+        {!post.userId.profilePic && <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />}
         <div className="post-header-details">
           <p className="post-username">{post.userId.username}</p>
           {post.userId._id === currentUserId && (

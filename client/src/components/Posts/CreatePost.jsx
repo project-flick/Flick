@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import defaultPP from '../../images/pp.png';
 import './CreatePost.scss';
 
 const CreatePost = ({ onPostCreated }) => {
@@ -50,9 +51,9 @@ const CreatePost = ({ onPostCreated }) => {
       <form onSubmit={handleSubmit}>
         <div className="create-post-input">
           <img
-            src="http://localhost:5050/uploads/default-profile.png"
+            src={defaultPP}
             alt="Profile"
-            className="profile-pic"
+            className="profile-pic pp-default"
           />
           <input
             type="text"
