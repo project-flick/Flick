@@ -29,9 +29,10 @@ body {
     footer {
       position: relative;
       margin-top: auto;
-      background-color: #000;
-      color: white;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: rgb(0, 0, 0);
       text-align: left;
       padding: 10px 20px;
       font-size: 14px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1)
     }
