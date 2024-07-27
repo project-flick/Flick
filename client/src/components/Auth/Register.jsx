@@ -34,6 +34,10 @@ const Register = () => {
         </div>
       </div>
       <div className="auth-left">
+        <div className="app-intro">
+          <img src={logo} className="logo"/>
+          <h1 className="mb-5">Flick</h1>
+        </div>        
         <form onSubmit={handleSubmit} className="auth-form">
           <h2>Sign Up</h2>
           <input

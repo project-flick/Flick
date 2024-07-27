@@ -37,6 +37,10 @@ const Login = () => {
         </div>
       </div>
       <div className="auth-right">
+        <div className="app-intro">
+          <img src={logo} className="logo"/>
+          <h1 className="mb-5">Flick</h1>
+        </div>
         <form onSubmit={handleSubmit} className="auth-form">
           <h2>Sign In</h2>
           <input
