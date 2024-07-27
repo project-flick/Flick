@@ -29,7 +29,6 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-left">
         <div className="auth-left-content">
-          <img src={logo} className="logo"/>
           <h1>Welcome Back!</h1>
           <p>Sign in to access your account.</p>
           <p>Don't have an account?</p>

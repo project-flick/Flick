@@ -26,7 +26,6 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-right">
         <div className="auth-right-content">
-          <img src={logo} className="logo"/>
           <h1>Join Us!</h1>
           <p>Create an account to get started.</p>
           <p>Already have an account?</p>
