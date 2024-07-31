@@ -1,25 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/userController');
-const AuthController = require('../controllers/authController');
 const auth = require('../middleware/auth');
+const multer = require('multer');
 
-// Create a new user
-router.post('/', AuthController.register);
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '/uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); 
+  },
+});
 
-// Get all users
-router.get('/', auth, UserController.getAllUsers);
-
-// Get a user by ID
-router.get('/:id', auth, UserController.getUserById);
+const upload = multer({ storage: storage });
 
 // Get user profile
 router.get('/profile', auth, UserController.getUserProfile);
 
-// Update a user
-router.put('/profile', auth, UserController.updateUser);
+// Get user posts
+router.get('/posts', auth, UserController.getUserPosts);
 
-// Delete a user
-router.delete('/profile', auth, UserController.deleteUser);
+// Update user profile
+router.put('/profile', auth, UserController.updateUserProfile);
+
+// Update user profile picture
+router.put('/profile/pic', auth, upload.single('profilePic'), UserController.updateProfilePicture);
 
 module.exports = router;
