@@ -1,153 +1,158 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import './Profile.scss';
 import Navbar from '../components/Navbar';
 
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [editProfile, setEditProfile] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
-  const [bio, setBio] = useState('');
+  const [posts, setPosts] = useState([]);
+  const [editMode, setEditMode] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  
-  const navigate = useNavigate();
+  const [bio, setBio] = useState('');
+  const [profilePic, setProfilePic] = useState(null);
+  const [newProfilePic, setNewProfilePic] = useState(null);
+
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get('http://localhost:5050/api/users/profile', {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+      setUser(res.data);
+      setUsername(res.data.username);
+      setEmail(res.data.email);
+      setBio(res.data.bio);
+      setProfilePic(res.data.profilePic);
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+      alert('Failed to fetch user profile');
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get('http://localhost:5050/api/posts/user', {
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+      setPosts(res.data);
+    } catch (err) {
+      console.error('Error fetching user posts:', err);
+      alert('Failed to fetch user posts');
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const res = await axios.get('http://localhost:5050/api/users/profile', {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
-        setUser(res.data);
-        setBio(res.data.bio);
-        setUsername(res.data.username);
-        setEmail(res.data.email);
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-        alert('Failed to fetch user profile');
-      }
-    };
-
     fetchUserProfile();
+    fetchUserPosts();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-  const handleFileChange = (e) => {
-    setProfilePic(e.target.files[0]);
-  };
-
-  const saveProfile = async () => {
+  const handleProfileUpdate = async () => {
     const token = localStorage.getItem('token');
-    const formData = new FormData();
-    formData.append('profilePic', profilePic);
-    formData.append('bio', bio);
-    formData.append('username', username);
-    formData.append('email', email);
-
     try {
-      const response = await axios.put('http://localhost:5050/api/users/profile', formData, {
+      await axios.put('http://localhost:5050/api/users/profile', {
+        username,
+        email,
+        bio,
+      }, {
         headers: {
-          'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
         },
       });
       alert('Profile updated successfully');
-      setEditProfile(false);
+      setEditMode(false);
+      fetchUserProfile();
     } catch (err) {
-      console.error('Save Profile Error:', err);
+      console.error('Error updating profile:', err);
       alert('Failed to update profile');
     }
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  const handleProfilePicChange = (e) => {
+    setNewProfilePic(e.target.files[0]);
+  };
+
+  const handleProfilePicUpload = async () => {
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('profilePic', newProfilePic);
+
+    try {
+      await axios.put('http://localhost:5050/api/users/profile/picture', formData, {
+        headers: {
+          'x-auth-token': token,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert('Profile picture updated successfully');
+      fetchUserProfile();
+    } catch (err) {
+      console.error('Error updating profile picture:', err);
+      alert('Failed to update profile picture');
+    }
+  };
 
   return (
-    <div>
-      <h2 className="page-title">Profile</h2>
-      <Navbar/>
-      <table>
-        <tbody>
-          <tr>
-            <td>Email</td>
-            <td>
-              {editProfile ? (
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              ) : (
-                user.email
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td>Username</td>
-            <td>
-              {editProfile ? (
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              ) : (
-                user.username
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td>Bio</td>
-            <td>
-              {editProfile ? (
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                ></textarea>
-              ) : (
-                user.bio
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td>Profile Picture</td>
-            <td>
-              {editProfile ? (
-                <input type="file" onChange={handleFileChange} />
-              ) : (
-                user.profilePic && (
-                  <img
-                    src={`http://localhost:5050/uploads/${user.profilePic}`}
-                    alt="Profile Pic"
-                  />
-                )
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <br />
-
-      <div>
-        {!editProfile ? (
-          <button onClick={() => setEditProfile(true)}>Edit Profile</button>
-        ) : (
-          <button onClick={saveProfile}>Save Changes</button>
-        )}
-        <button onClick={handleLogout}>Logout</button>
-      </div>
+    <>
+    <Navbar/>
+    <div className="profile-page">
+      {user ? (
+        <>
+          <div className="profile-header">
+            <img src={`http://localhost:5050/uploads/${profilePic}`} alt="Profile" className="profile-pic" />
+            <div className="profile-info">
+              <h2>{username}</h2>
+              <p>{bio}</p>
+            </div>
+          </div>
+          <button onClick={() => setEditMode(!editMode)}>Edit Profile</button>
+          {editMode && (
+            <div className="edit-profile">
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Bio"
+              />
+              <input
+                type="file"
+                onChange={handleProfilePicChange}
+              />
+              <button onClick={handleProfileUpdate}>Save Changes</button>
+              {newProfilePic && <button onClick={handleProfilePicUpload}>Upload Profile Picture</button>}
+            </div>
+          )}
+          <div className="profile-posts">
+            {posts.map(post => (
+              <div key={post._id} className="post-item">
+                {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />}
+                <p>{post.content}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
+    </>
   );
 };
 

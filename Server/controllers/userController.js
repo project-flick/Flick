@@ -1,42 +1,5 @@
 const User = require('../models/User');
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
-
-// Create a new user
-exports.createUser = async (req, res) => {
-  try {
-    const newUser = new User(req.body);
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Get all users
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Get a user by ID
-exports.getUserById = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    if (!ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+const Post = require('../models/Post');
 
 // Get user profile
 exports.getUserProfile = async (req, res) => {
@@ -47,36 +10,53 @@ exports.getUserProfile = async (req, res) => {
     }
     res.json(user);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };
 
-// Update a user
-exports.updateUser = async (req, res) => {
+// Get user posts
+exports.getUserPosts = async (req, res) => {
   try {
-    const userId = req.user.id; 
-    if (!ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
-    const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
-    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json(updatedUser);
+    const posts = await Post.find({ userId: req.user.id }).sort({ date: -1 });
+    res.json(posts);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };
 
-// Delete a user
-exports.deleteUser = async (req, res) => {
+// Update user profile
+exports.updateUserProfile = async (req, res) => {
+  const { username, email, bio } = req.body;
+  const userFields = { username, email, bio };
+
   try {
-    const userId = req.user.id; 
-    if (!ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
-    const deletedUser = await User.findByIdAndDelete(userId);
-    if (!deletedUser) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json({ message: 'User deleted' });
+    let user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user = await User.findByIdAndUpdate(req.user.id, { $set: userFields }, { new: true });
+    res.json(user);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// Update user profile picture
+exports.updateProfilePicture = async (req, res) => {
+  try {
+    let user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (req.file && req.file.filename) {
+      user.profilePic = req.file.filename;
+    }
+
+    await user.save();
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };

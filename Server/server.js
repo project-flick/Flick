@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const multer = require('multer');
 
+// Initialize express app
 const app = express();
 
 // Middleware
@@ -21,7 +23,7 @@ mongoose.connect(dbURI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-  // Import routes
+// Import routes
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
