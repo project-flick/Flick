@@ -1,0 +1,15 @@
+.follow-btn {
+    $bg: #004cff;
+
+    border-radius: 5px;
+    background-color: $bg;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($bg, 10%);
+    }
+}

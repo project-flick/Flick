@@ -8,6 +8,7 @@ import EditPost from './components/Posts/EditPost';
 import PrivateRoute from './components/PrivateRoute';
 import './style.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import NotificationsPage from './components/Notifications/NotificationsPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<PrivateRoute element={Home} />} />
           <Route path="/profile" element={<PrivateRoute element={Profile} />} />
           <Route path="/edit/:id" element={<PrivateRoute element={EditPost} />} />
+          <Route path="/notifications" element={<PrivateRoute element={NotificationsPage} />} />  
         </Routes>
         <footer>
           &copy; Flick 2024

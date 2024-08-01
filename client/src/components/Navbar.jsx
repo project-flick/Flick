@@ -36,6 +36,9 @@ const Navbar = () => {
             <li className={location.pathname === '/friends' ? 'active' : ''}>
               <Link to="/friends">Friends</Link>
             </li>
+            <li className={location.pathname === '/notifications' ? 'active' : ''}>
+              <Link to="/notifications">Notifications</Link>
+            </li>
             <li>
               <Link className="logout-button" onClick={handleLogout}>Log out</Link>
             </li>
