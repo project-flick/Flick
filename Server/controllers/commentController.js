@@ -3,11 +3,7 @@ const Comment = require('../models/Comment');
 // Create a new comment
 exports.createComment = async (req, res) => {
   try {
-    const newComment = new Comment({
-      userId: req.body.userId,
-      postId: req.body.postId,
-      text: req.body.text
-    });
+    const newComment = new Comment(req.body);
     const savedComment = await newComment.save();
     res.status(201).json(savedComment);
   } catch (err) {
@@ -15,10 +11,10 @@ exports.createComment = async (req, res) => {
   }
 };
 
-// Get all comments for a post
-exports.getCommentsByPostId = async (req, res) => {
+// Get all comments
+exports.getAllComments = async (req, res) => {
   try {
-    const comments = await Comment.find({ postId: req.params.postId }).populate('userId', 'username');
+    const comments = await Comment.find();
     res.status(200).json(comments);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -28,7 +24,7 @@ exports.getCommentsByPostId = async (req, res) => {
 // Get a comment by ID
 exports.getCommentById = async (req, res) => {
   try {
-    const comment = await Comment.findById(req.params.id).populate('userId', 'username');
+    const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
     res.status(200).json(comment);
   } catch (err) {
@@ -39,7 +35,7 @@ exports.getCommentById = async (req, res) => {
 // Update a comment
 exports.updateComment = async (req, res) => {
   try {
-    const updatedComment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('userId', 'username');
+    const updatedComment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedComment) return res.status(404).json({ message: 'Comment not found' });
     res.status(200).json(updatedComment);
   } catch (err) {
@@ -53,6 +49,16 @@ exports.deleteComment = async (req, res) => {
     const deletedComment = await Comment.findByIdAndDelete(req.params.id);
     if (!deletedComment) return res.status(404).json({ message: 'Comment not found' });
     res.status(200).json({ message: 'Comment deleted' });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Get comments for a post
+exports.getCommentsForPost = async (req, res) => {
+  try {
+    const comments = await Comment.find({ postId: req.params.postId }).populate('userId', 'username');
+    res.status(200).json(comments);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

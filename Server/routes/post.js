@@ -1,30 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const PostController = require('../controllers/postController');
+const postController = require('../controllers/postController');
 const auth = require('../middleware/auth');
 
 // Create a new post
-router.post('/', auth, PostController.createPost);
+router.post('/', auth, postController.createPost);
 
 // Get all posts
-router.get('/', auth, PostController.getAllPosts);
+router.get('/', auth, postController.getAllPosts);
 
 // Get a post by ID
-router.get('/:id', auth, PostController.getPostById);
+router.get('/:id', auth, postController.getPostById);
 
 // Update a post
-router.put('/:id', auth, PostController.updatePost);
+router.put('/:id', auth, postController.updatePost);
 
 // Delete a post
-router.delete('/:id', auth, PostController.deletePost);
+router.delete('/:id', auth, postController.deletePost);
 
 // Like a post
-router.post('/:id/like', auth, PostController.likePost);
+router.post('/like', auth, postController.likePost);
 
 // Unlike a post
-router.delete('/:id/like', auth, PostController.unlikePost);
+router.post('/unlike', auth, postController.unlikePost);
 
 // Get likes for a post
-router.get('/:id/likes', auth, PostController.getPostLikes);
+router.get('/likes/:postId', auth, postController.getLikesForPost);
 
 module.exports = router;

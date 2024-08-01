@@ -8,6 +8,8 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   profilePic: { type: String, default: '' },
   bio: { type: String, default: '' },
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  friendRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

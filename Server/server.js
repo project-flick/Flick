@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const multer = require('multer');
 
-// Initialize express app
 const app = express();
 
 // Middleware
@@ -23,12 +21,13 @@ mongoose.connect(dbURI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-// Import routes
+  // Import routes
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const authRoutes = require('./routes/auth');
 const likeRoutes = require('./routes/like');
+const notificationRoutes = require('./routes/notification');
 
 // Use routes
 app.use('/api/users', userRoutes);
@@ -36,6 +35,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/likes', likeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const port = process.env.PORT || 5050;
 
