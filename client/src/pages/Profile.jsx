@@ -1,156 +1,122 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import './Profile.scss';
-import Navbar from '../components/Navbar';
-
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [editProfile, setEditProfile] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
-  const [bio, setBio] = useState('');
+  const [editMode, setEditMode] = useState(false);
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [bio, setBio] = useState('');
+  const [password, setPassword] = useState('');
+  const [profilePic, setProfilePic] = useState(null);
 
-  const navigate = useNavigate();
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get('http://localhost:5050/api/users/profile', {
+        headers: { 'x-auth-token': token },
+      });
+      setUser(res.data);
+      setUsername(res.data.username);
+      setBio(res.data.bio);
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get('http://localhost:5050/api/posts/user', {
+        headers: { 'x-auth-token': token },
+      });
+      setPosts(res.data);
+    } catch (err) {
+      console.error('Error fetching user posts:', err);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const res = await axios.get('http://localhost:5050/api/users/profile', {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
-        setUser(res.data);
-        setBio(res.data.bio);
-        setUsername(res.data.username);
-        setEmail(res.data.email);
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-        alert('Failed to fetch user profile');
-      }
-    };
-
-    const fetchUserPosts = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const res = await axios.get('http://localhost:5050/api/posts/user', {
-          headers: {
-            'x-auth-token': token,
-          },
-        });
-        setPosts(res.data);
-      } catch (err) {
-        console.error('Error fetching user posts:', err);
-        alert('Failed to fetch user posts');
-      }
-    };
-
     fetchUserProfile();
     fetchUserPosts();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-  const handleFileChange = (e) => {
-    setProfilePic(e.target.files[0]);
-  };
-
-  const saveProfile = async () => {
+  const handleSaveChanges = async () => {
     const token = localStorage.getItem('token');
     const formData = new FormData();
-    formData.append('profilePic', profilePic);
-    formData.append('bio', bio);
     formData.append('username', username);
-    formData.append('email', email);
+    formData.append('bio', bio);
+    if (password) formData.append('password', password);
+    if (profilePic) formData.append('profilePic', profilePic);
 
     try {
-      const response = await axios.put('http://localhost:5050/api/users/profile', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'x-auth-token': token,
-        },
+      await axios.put('http://localhost:5050/api/users/profile', formData, {
+        headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' },
       });
       alert('Profile updated successfully');
-      setEditProfile(false);
-      window.location.reload();
+      setEditMode(false);
+      fetchUserProfile();
     } catch (err) {
-      console.error('Save Profile Error:', err);
+      console.error('Error updating profile:', err);
       alert('Failed to update profile');
     }
   };
 
-  const cancelEdit = () => {
-    if (user) {
-      setBio(user.bio);
-      setUsername(user.username);
-      setEmail(user.email);
-      setProfilePic(null);
-      setEditProfile(false);
-    }
+  const handleCancelChanges = () => {
+    setEditMode(false);
+    setUsername(user.username);
+    setBio(user.bio);
+    setPassword('');
+    setProfilePic(null);
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <>
-    <Navbar/>
     <div className="profile-page">
-      <div className="profile-header">
-        <img src={`http://localhost:5050/uploads/${user.profilePic}`} alt="Profile Pic" className="profile-pic" />
-        <h2>{user.username}</h2>
-        <p>{user.bio}</p>
-        <button onClick={() => setEditProfile(true)}>Edit Profile</button>
-      </div>
-
-      {editProfile && (
-        <div className="edit-profile-form">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter new username"
+      {user ? (
+        <div className="profile-details">
+          <img
+            src={profilePic ? URL.createObjectURL(profilePic) : `http://localhost:5050/uploads/${user.profilePic}`}
+            alt="Profile"
+            className="profile-pic"
           />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter new email"
-          />
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Enter new bio"
-          ></textarea>
-          <input type="file" onChange={handleFileChange} />
-          <button onClick={saveProfile}>Save Changes</button>
-          <button onClick={cancelEdit}>Cancel Changes</button>
+          <div className="profile-info">
+            {editMode ? (
+              <>
+                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <textarea value={bio} onChange={(e) => setBio(e.target.value)}></textarea>
+                <input type="password" placeholder="New Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input type="file" onChange={(e) => setProfilePic(e.target.files[0])} />
+                <div className="profile-buttons">
+                  <button onClick={handleSaveChanges}>Save Changes</button>
+                  <button onClick={handleCancelChanges}>Cancel Changes</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>{user.username}</h2>
+                <p>{user.bio}</p>
+                <button onClick={() => setEditMode(true)}>Edit Profile</button>
+              </>
+            )}
+          </div>
         </div>
+      ) : (
+        <p>Loading...</p>
       )}
-
-      <div className="profile-posts">
-        {posts.length > 0 ? (
-          posts.map(post => (
-            <div key={post._id} className="profile-post">
+      <div className="user-posts">
+        {posts.length ? (
+          posts.map((post) => (
+            <div key={post._id} className="post-item">
               <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />
               <p>{post.content}</p>
             </div>
           ))
         ) : (
-          <p className="no-posts-message">No posts to display</p>
+          <p className="no-posts">No posts</p>
         )}
       </div>
     </div>
-    </>
   );
 };
 

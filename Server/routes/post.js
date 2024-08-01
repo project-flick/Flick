@@ -7,10 +7,13 @@ const auth = require('../middleware/auth');
 router.post('/', auth, postController.createPost);
 
 // Get all posts
-router.get('/', auth, postController.getAllPosts);
+router.get('/', postController.getAllPosts);
+
+// Get posts by user ID
+router.get('/user', auth, postController.getUserPosts);
 
 // Get a post by ID
-router.get('/:id', auth, postController.getPostById);
+router.get('/:id', postController.getPostById);
 
 // Update a post
 router.put('/:id', auth, postController.updatePost);

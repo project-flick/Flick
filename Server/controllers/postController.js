@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
+
 const upload = multer({ storage: storage });
 
 // Create a new post
@@ -51,6 +52,17 @@ exports.getPostById = async (req, res) => {
     res.status(200).json(post);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+};
+
+// Get posts by user ID
+exports.getUserPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({ userId: req.user.id });
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 };
 
