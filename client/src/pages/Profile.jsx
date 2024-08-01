@@ -11,6 +11,7 @@ const Profile = () => {
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [profilePic, setProfilePic] = useState(null);
 
   const fetchUserProfile = async () => {
@@ -50,6 +51,11 @@ const Profile = () => {
   };
 
   const saveProfile = async () => {
+    if (password && password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('username', username);
@@ -62,13 +68,11 @@ const Profile = () => {
       await axios.put('http://localhost:5050/api/users/profile', formData, {
         headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' },
       });
-      alert('Profile updated successfully');
       setEditProfile(false);
       fetchUserProfile();
       window.location.reload();
     } catch (err) {
       console.error('Error updating profile:', err);
-      alert('Failed to update profile');
     }
   };
 
@@ -78,6 +82,7 @@ const Profile = () => {
     setBio(user.bio);
     setEmail(user.email);
     setPassword('');
+    setConfirmPassword('');
     setProfilePic(null);
   };
 
@@ -121,6 +126,12 @@ const Profile = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter new password"
+            />
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm new password"
             />
             <button onClick={saveProfile}>Save Changes</button>
             <button onClick={cancelEdit}>Cancel Changes</button>

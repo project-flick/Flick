@@ -195,21 +195,35 @@ exports.getUserProfile = async (req, res) => {
 // Update user profile
 exports.updateUserProfile = async (req, res) => {
   try {
-    const { username, bio } = req.body;
-    const user = await User.findById(req.user.id);
+    const userId = req.user.id;
+    const { username, email, bio, password } = req.body;
 
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update fields
     if (username) user.username = username;
+    if (email) user.email = email;
     if (bio) user.bio = bio;
 
+    // Handle password change
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    // Handle profile picture change
     if (req.file) {
       user.profilePic = req.file.filename;
     }
 
     await user.save();
-    res.status(200).json(user);
+    res.json(user);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
