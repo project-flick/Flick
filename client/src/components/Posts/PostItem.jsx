@@ -5,6 +5,7 @@ import axios from 'axios';
 import Comments from './Comments/Comments';
 import Modal from './Likes/LikeModal';
 import './PostItem.scss';
+import moment from 'moment';
 
 const PostItem = ({ post }) => {
   const [likes, setLikes] = useState(post.likes.length);
@@ -103,7 +104,10 @@ const PostItem = ({ post }) => {
       </div>
       {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" className="post-image" />}
       <div className="post-content">
-        <p>{post.content}</p>
+        <div className='post-details'>
+          <p>{post.content}</p>
+          <span className="post-timestamp">{moment(post.createdAt).fromNow()}</span>
+        </div>
         <div className="post-actions">
           <button onClick={handleToggleLike} className="post-like">
             <i className={`fas fa-heart${userHasLiked ? ' liked' : ''}`}></i>
@@ -117,19 +121,19 @@ const PostItem = ({ post }) => {
       </div>
       {showLikes && (
         <Modal onClose={toggleShowLikes}>
-            <div className="modal-header">
-              <h4>Liked by:</h4>
+          <div className="modal-header">
+            <h4>Liked by:</h4>
+          </div>
+          {likesList.map((like) => (
+            <div key={like._id} className="liked-user">
+              <img
+                src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
+                alt="Profile Pic"
+                className="like-profile-pic"
+              />
+              <p>{like.username}</p>
             </div>
-            {likesList.map((like) => (
-              <div key={like._id} className="liked-user">
-                <img
-                  src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
-                  alt="Profile Pic"
-                  className="like-profile-pic"
-                />
-                <p>{like.username}</p>
-              </div>
-            ))}
+          ))}
         </Modal>
       )}
     </div>

@@ -58,6 +58,22 @@
     margin-bottom: 10px;
   }
 
+  .post-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .post-timestamp {
+      color: #888;
+      font-size: 0.9em;
+    }
+  }
+
   .post-image {
     width: 100%;
     border-radius: 8px;
