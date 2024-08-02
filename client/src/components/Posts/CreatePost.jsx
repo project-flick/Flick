@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import defaultPP from '../../images/pp.png';
 import './CreatePost.scss';
@@ -7,6 +7,23 @@ const CreatePost = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [profilePic, setProfilePic] = useState('');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await axios.get('http://localhost:5050/api/users/profile', {
+          headers: { 'x-auth-token': token },
+        });
+        setProfilePic(res.data.profilePic);
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,11 +67,11 @@ const CreatePost = ({ onPostCreated }) => {
     <div className="create-post">
       <form onSubmit={handleSubmit}>
         <div className="create-post-input">
-          <img
-            src={defaultPP}
-            alt="Profile"
-            className="profile-pic pp-default"
-          />
+          {profilePic ? (
+            <img src={`http://localhost:5050/uploads/${profilePic}`} alt="Profile" className="profile-pic" />
+          ) : (
+            <img src={defaultPP} alt="Profile" className="profile-pic pp-default" />
+          )}
           <input
             type="text"
             value={content}

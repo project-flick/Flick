@@ -39,7 +39,7 @@ const PostItem = ({ post }) => {
       }
       setUserHasLiked(!userHasLiked);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to update like status', err);
       alert('Failed to update like status');
     }
   };
@@ -82,11 +82,14 @@ const PostItem = ({ post }) => {
   return (
     <div className="post">
       <div className="post-header">
-        {post.userId.profilePic && <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />}
-        {!post.userId.profilePic && <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />}
+        {post.userId && post.userId.profilePic ? (
+          <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
+        ) : (
+          <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />
+        )}
         <div className="post-header-details">
-          <p className="post-username">{post.userId.username}</p>
-          {post.userId._id === currentUserId && (
+          <p className="post-username">{post.userId ? post.userId.username : 'Unknown User'}</p>
+          {post.userId && post.userId._id === currentUserId && (
             <div className="post-actions">
               <Link to={`/edit/${post._id}`} className="post-edit">
                 <i className="fas fa-edit"></i>
@@ -114,15 +117,19 @@ const PostItem = ({ post }) => {
       </div>
       {showLikes && (
         <Modal onClose={toggleShowLikes}>
-          <div className="modal-content">
             <div className="modal-header">
               <h4>Liked by:</h4>
-              <button onClick={toggleShowLikes} className="modal-close">&times;</button>
             </div>
             {likesList.map((like) => (
-              <p key={like._id}>{like.userId.username}</p>
+              <div key={like._id} className="liked-user">
+                <img
+                  src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
+                  alt="Profile Pic"
+                  className="like-profile-pic"
+                />
+                <p>{like.username}</p>
+              </div>
             ))}
-          </div>
         </Modal>
       )}
     </div>

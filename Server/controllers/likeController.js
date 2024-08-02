@@ -45,12 +45,11 @@ exports.unlikePost = async (req, res) => {
 };
 
 // Get likes of a post
-exports.getLikesByPost = async (req, res) => {
+exports.getLikesForPost = async (req, res) => {
   try {
-    const { postId } = req.params;
-
-    const likes = await Like.find({ postId }).populate('userId', 'username');
-    res.status(200).json(likes);
+    const post = await Post.findById(req.params.postId).populate('likes', 'username profilePic');
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+    res.status(200).json(post.likes);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
