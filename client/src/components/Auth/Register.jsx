@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import logo from '../../images/logo.jpeg';
+import logo from '../../images/logo.png';
 import './Auth.scss';
 
 const Register = () => {
@@ -35,7 +35,6 @@ const Register = () => {
       <div className="auth-left">
         <div className="app-intro">
           <img src={logo} className="logo"/>
-          <h1 className="mb-5">Flick</h1>
         </div>        
         <form onSubmit={handleSubmit} className="auth-form">
           <h2>Sign Up</h2>

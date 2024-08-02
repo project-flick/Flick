@@ -24,9 +24,6 @@ function App() {
           <Route path="/edit/:id" element={<PrivateRoute element={EditPost} />} />
           <Route path="/notifications" element={<PrivateRoute element={NotificationsPage} />} />  
         </Routes>
-        <footer>
-          &copy; Flick 2024
-        </footer>
       </div>
     </Router>
   );

@@ -4,6 +4,7 @@ import './Profile.scss';
 import Navbar from '../components/Navbar';
 import defaultPP from '../images/pp.png';
 import Modal from '../pages/Modal';
+import Footer from '../components/Footer/Footer';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -167,9 +168,10 @@ const Profile = () => {
               ))}
             </div>
           </Modal>
-        )}
+        )}        
       </div>
-    </>
+      <Footer />
+    </>    
   );
 };
 
