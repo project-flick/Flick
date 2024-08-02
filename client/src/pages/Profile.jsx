@@ -96,10 +96,14 @@ const Profile = () => {
           ) : (
             <img src={defaultPP} alt="Profile Pic" className="profile-pic pp-default" />
           )}
-          <h2>{user?.username}</h2>
-          <p>{user?.bio}</p>
-          <button onClick={() => setEditMode(true)}>Edit Profile</button>
-          <button onClick={() => setShowFollowersModal(true)}>Followers ({followers.length})</button>
+          <div className="profile-info">
+            <h2>{user?.username}</h2>
+            <p>{user?.bio}</p>
+            <div className="profile-actions">
+              <button onClick={() => setEditMode(true)}>Edit Profile</button>
+              <button onClick={() => setShowFollowersModal(true)}>Followers ({followers.length})</button>
+            </div>
+          </div>
         </div>
 
         {editMode && (
