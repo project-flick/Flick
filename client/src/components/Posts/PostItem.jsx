@@ -39,7 +39,7 @@ const PostItem = ({ post }) => {
       }
       setUserHasLiked(!userHasLiked);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to update like status', err);
       alert('Failed to update like status');
     }
   };
@@ -117,19 +117,20 @@ const PostItem = ({ post }) => {
       </div>
       {showLikes && (
         <Modal onClose={toggleShowLikes}>
-          <div className="modal-header">
-            <h4>Liked by:</h4>
-          </div>
-          {likesList.map((like) => (
-            <div key={like._id} className="liked-user">
-              <img
-                src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
-                alt="Profile Pic"
-              />
-              <p>{like.username}</p>
+            <div className="modal-header">
+              <h4>Liked by:</h4>
             </div>
-          ))}
-      </Modal>
+            {likesList.map((like) => (
+              <div key={like._id} className="liked-user">
+                <img
+                  src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
+                  alt="Profile Pic"
+                  className="like-profile-pic"
+                />
+                <p>{like.username}</p>
+              </div>
+            ))}
+        </Modal>
       )}
     </div>
   );
