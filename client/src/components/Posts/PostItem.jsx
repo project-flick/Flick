@@ -117,16 +117,19 @@ const PostItem = ({ post }) => {
       </div>
       {showLikes && (
         <Modal onClose={toggleShowLikes}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4>Liked by:</h4>
-              <button onClick={toggleShowLikes} className="modal-close">&times;</button>
-            </div>
-            {likesList.map((like) => (
-              <p key={like._id}>{like.userId.username}</p>
-            ))}
+          <div className="modal-header">
+            <h4>Liked by:</h4>
           </div>
-        </Modal>
+          {likesList.map((like) => (
+            <div key={like._id} className="liked-user">
+              <img
+                src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
+                alt="Profile Pic"
+              />
+              <p>{like.username}</p>
+            </div>
+          ))}
+      </Modal>
       )}
     </div>
   );
