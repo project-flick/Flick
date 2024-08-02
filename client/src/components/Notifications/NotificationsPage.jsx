@@ -3,7 +3,6 @@ import Navbar from '../Navbar';
 import './NotificationsPage.scss';
 import defaultPP from '../../images/pp.png';
 import {FollowButton, FollowButtonStates} from '../UI/FollowButton';
-import Footer from '../Footer/Footer';
 
 const NotifTypes = {
 	FOLLOW: 'follow',
@@ -51,7 +50,6 @@ const NotificationsPage = (props) => {
 					)}
 				</div>
 			</div>
-			<Footer />
 		</>
   )
 }
