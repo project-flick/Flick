@@ -82,11 +82,14 @@ const PostItem = ({ post }) => {
   return (
     <div className="post">
       <div className="post-header">
-        {post.userId.profilePic && <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />}
-        {!post.userId.profilePic && <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />}
+        {post.userId && post.userId.profilePic ? (
+          <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
+        ) : (
+          <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />
+        )}
         <div className="post-header-details">
-          <p className="post-username">{post.userId.username}</p>
-          {post.userId._id === currentUserId && (
+          <p className="post-username">{post.userId ? post.userId.username : 'Unknown User'}</p>
+          {post.userId && post.userId._id === currentUserId && (
             <div className="post-actions">
               <Link to={`/edit/${post._id}`} className="post-edit">
                 <i className="fas fa-edit"></i>
