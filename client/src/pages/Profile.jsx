@@ -13,8 +13,9 @@ const Profile = () => {
   const [bio, setBio] = useState('');
   const [password, setPassword] = useState('');
   const [profilePic, setProfilePic] = useState(null);
-  const [friends, setFriends] = useState([]);
-  const [showFriendsModal, setShowFriendsModal] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
+
   const token = localStorage.getItem('token');
 
   const fetchUserProfile = async () => {
@@ -41,22 +42,22 @@ const Profile = () => {
     }
   };
 
-  const fetchFriends = async () => {
+  const fetchFollowers = async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/friends/friends', {
+      const res = await axios.get('http://localhost:5050/api/friends/followers', {
         headers: { 'x-auth-token': token },
       });
-      setFriends(res.data);
+      setFollowers(res.data);
     } catch (err) {
-      console.error('Error fetching friends:', err);
+      console.error('Error fetching followers:', err);
     }
   };
 
   useEffect(() => {
     fetchUserProfile();
     fetchUserPosts();
-    fetchFriends();
-  }, [fetchUserProfile, fetchUserPosts, fetchFriends]);
+    fetchFollowers();
+  }, []);
 
   const handleSaveChanges = async () => {
     const formData = new FormData();
@@ -85,20 +86,20 @@ const Profile = () => {
     setProfilePic(null);
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <Navbar />
       <div className="profile-page">
         <div className="profile-header">
-          <img src={user.profilePic ? `http://localhost:5050/uploads/${user.profilePic}` : defaultPP} alt="Profile Pic" className="profile-pic" />
-          <h2>{user.username}</h2>
-          <p>{user.bio}</p>
+          {user && user.profilePic ? (
+            <img src={`http://localhost:5050/uploads/${user.profilePic}`} alt="Profile Pic" className="profile-pic" />
+          ) : (
+            <img src={defaultPP} alt="Profile Pic" className="profile-pic pp-default" />
+          )}
+          <h2>{user?.username}</h2>
+          <p>{user?.bio}</p>
           <button onClick={() => setEditMode(true)}>Edit Profile</button>
-          <button onClick={() => setShowFriendsModal(true)}>Friends ({friends.length})</button>
+          <button onClick={() => setShowFollowersModal(true)}>Followers ({followers.length})</button>
         </div>
 
         {editMode && (
@@ -108,6 +109,11 @@ const Profile = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter new username"
+            />
+            <input
+              type="email"
+              value={user?.email}
+              disabled
             />
             <textarea
               value={bio}
@@ -128,7 +134,7 @@ const Profile = () => {
 
         <div className="profile-posts">
           {posts.length > 0 ? (
-            posts.map(post => (
+            posts.map((post) => (
               <div key={post._id} className="profile-post">
                 <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />
                 <p>{post.content}</p>
@@ -139,21 +145,23 @@ const Profile = () => {
           )}
         </div>
 
-        {showFriendsModal && (
-          <Modal onClose={() => setShowFriendsModal(false)}>
-            <div className="modal-header">
-              <h4>Friends</h4>
+        {showFollowersModal && (
+          <Modal onClose={() => setShowFollowersModal(false)}>
+            <h2>Followers</h2>
+            <div className="followers-list">
+              {followers.map((follower) => (
+                <div key={follower._id} className="follower-item">
+                  <img
+                    src={follower.profilePic ? `http://localhost:5050/uploads/${follower.profilePic}` : defaultPP}
+                    alt="Profile Pic"
+                    className="follower-profile-pic"
+                  />
+                  <div className="follower-info">
+                    <p>{follower.username}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            {friends.map(friend => (
-              <div key={friend._id} className="friend-item">
-                <img
-                  src={friend.profilePic ? `http://localhost:5050/uploads/${friend.profilePic}` : defaultPP}
-                  alt="Profile Pic"
-                  className="friend-profile-pic"
-                />
-                <p>{friend.username}</p>
-              </div>
-            ))}
           </Modal>
         )}
       </div>

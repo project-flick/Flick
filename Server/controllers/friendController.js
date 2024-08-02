@@ -1,13 +1,12 @@
 const User = require('../models/User');
 
-// Get all users
+// Get all users excluding the current user
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('username profilePic');
-    res.json(users);
+    const users = await User.find({ _id: { $ne: req.user.id } }).select('username profilePic');
+    res.status(200).json(users);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(400).json({ message: err.message });
   }
 };
 
@@ -15,26 +14,25 @@ exports.getAllUsers = async (req, res) => {
 exports.followUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    const targetUser = await User.findById(req.body.userId);
+    const userToFollow = await User.findById(req.body.userId);
 
-    if (!user || !targetUser) {
+    if (!user || !userToFollow) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     if (user.friends.includes(req.body.userId)) {
-      return res.status(400).json({ message: 'You are already friends with this user' });
+      return res.status(400).json({ message: 'You are already following this user' });
     }
 
     user.friends.push(req.body.userId);
-    targetUser.friends.push(req.user.id);
+    userToFollow.friendRequests.push(req.user.id);
 
     await user.save();
-    await targetUser.save();
+    await userToFollow.save();
 
-    res.json({ message: 'User followed' });
+    res.status(200).json({ message: 'User followed' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(400).json({ message: err.message });
   }
 };
 
@@ -42,21 +40,44 @@ exports.followUser = async (req, res) => {
 exports.unfollowUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    const targetUser = await User.findById(req.body.userId);
+    const userToUnfollow = await User.findById(req.body.userId);
 
-    if (!user || !targetUser) {
+    if (!user || !userToUnfollow) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.friends = user.friends.filter(id => id.toString() !== req.body.userId);
-    targetUser.friends = targetUser.friends.filter(id => id.toString() !== req.user.id);
+    if (!user.friends.includes(req.body.userId)) {
+      return res.status(400).json({ message: 'You are not following this user' });
+    }
+
+    user.friends = user.friends.filter((friendId) => friendId.toString() !== req.body.userId);
+    userToUnfollow.friendRequests = userToUnfollow.friendRequests.filter((reqId) => reqId.toString() !== req.user.id);
 
     await user.save();
-    await targetUser.save();
+    await userToUnfollow.save();
 
-    res.json({ message: 'User unfollowed' });
+    res.status(200).json({ message: 'User unfollowed' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Get friends for the logged-in user
+exports.getFriends = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('friends', 'username profilePic');
+    res.status(200).json(user.friends);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Get followers for the logged-in user
+exports.getFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('friendRequests', 'username profilePic');
+    res.status(200).json(user.friendRequests);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
