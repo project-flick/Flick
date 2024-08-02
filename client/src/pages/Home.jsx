@@ -11,7 +11,6 @@ const Home = () => {
       <Navbar/>
       <CreatePost />
       <PostList />
-      <Footer />
     </div>
   );
 };

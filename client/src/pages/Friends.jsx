@@ -3,7 +3,6 @@ import axios from 'axios';
 import defaultPP from '../images/pp.png';
 import './Friends.scss';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer/Footer';
 
 const FriendsPage = () => {
   const [users, setUsers] = useState([]);
@@ -97,7 +96,6 @@ const FriendsPage = () => {
           ))}
         </div>
       </div>
-      <Footer />
     </>
   );
 };
