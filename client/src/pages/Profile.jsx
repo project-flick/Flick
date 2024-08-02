@@ -2,20 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.scss';
 import Navbar from '../components/Navbar';
+import defaultPP from '../images/pp.png';
+import Modal from '../pages/Modal';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [editProfile, setEditProfile] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [profilePic, setProfilePic] = useState(null);
+  const [friends, setFriends] = useState([]);
+  const [showFriendsModal, setShowFriendsModal] = useState(false);
+  const token = localStorage.getItem('token');
 
   const fetchUserProfile = async () => {
-    const token = localStorage.getItem('token');
     try {
       const res = await axios.get('http://localhost:5050/api/users/profile', {
         headers: { 'x-auth-token': token },
@@ -23,14 +25,12 @@ const Profile = () => {
       setUser(res.data);
       setUsername(res.data.username);
       setBio(res.data.bio);
-      setEmail(res.data.email);
     } catch (err) {
       console.error('Error fetching user profile:', err);
     }
   };
 
   const fetchUserPosts = async () => {
-    const token = localStorage.getItem('token');
     try {
       const res = await axios.get('http://localhost:5050/api/posts/user', {
         headers: { 'x-auth-token': token },
@@ -41,26 +41,27 @@ const Profile = () => {
     }
   };
 
+  const fetchFriends = async () => {
+    try {
+      const res = await axios.get('http://localhost:5050/api/friends/friends', {
+        headers: { 'x-auth-token': token },
+      });
+      setFriends(res.data);
+    } catch (err) {
+      console.error('Error fetching friends:', err);
+    }
+  };
+
   useEffect(() => {
     fetchUserProfile();
     fetchUserPosts();
-  }, []);
+    fetchFriends();
+  }, [fetchUserProfile, fetchUserPosts, fetchFriends]);
 
-  const handleFileChange = (e) => {
-    setProfilePic(e.target.files[0]);
-  };
-
-  const saveProfile = async () => {
-    if (password && password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
+  const handleSaveChanges = async () => {
     const formData = new FormData();
     formData.append('username', username);
     formData.append('bio', bio);
-    formData.append('email', email);
     if (password) formData.append('password', password);
     if (profilePic) formData.append('profilePic', profilePic);
 
@@ -68,21 +69,19 @@ const Profile = () => {
       await axios.put('http://localhost:5050/api/users/profile', formData, {
         headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' },
       });
-      setEditProfile(false);
+      setEditMode(false);
       fetchUserProfile();
-      window.location.reload();
     } catch (err) {
       console.error('Error updating profile:', err);
+      alert('Failed to update profile');
     }
   };
 
-  const cancelEdit = () => {
-    setEditProfile(false);
+  const handleCancelChanges = () => {
+    setEditMode(false);
     setUsername(user.username);
     setBio(user.bio);
-    setEmail(user.email);
     setPassword('');
-    setConfirmPassword('');
     setProfilePic(null);
   };
 
@@ -95,13 +94,14 @@ const Profile = () => {
       <Navbar />
       <div className="profile-page">
         <div className="profile-header">
-          <img src={`http://localhost:5050/uploads/${user.profilePic}`} alt="Profile Pic" className="profile-pic" />
+          <img src={user.profilePic ? `http://localhost:5050/uploads/${user.profilePic}` : defaultPP} alt="Profile Pic" className="profile-pic" />
           <h2>{user.username}</h2>
           <p>{user.bio}</p>
-          <button onClick={() => setEditProfile(true)}>Edit Profile</button>
+          <button onClick={() => setEditMode(true)}>Edit Profile</button>
+          <button onClick={() => setShowFriendsModal(true)}>Friends ({friends.length})</button>
         </div>
 
-        {editProfile && (
+        {editMode && (
           <div className="edit-profile-form">
             <input
               type="text"
@@ -109,40 +109,28 @@ const Profile = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter new username"
             />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter new email"
-            />
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Enter new bio"
             ></textarea>
-            <input type="file" onChange={handleFileChange} />
+            <input type="file" onChange={(e) => setProfilePic(e.target.files[0])} />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter new password"
             />
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
-            />
-            <button onClick={saveProfile}>Save Changes</button>
-            <button onClick={cancelEdit}>Cancel Changes</button>
+            <button onClick={handleSaveChanges}>Save Changes</button>
+            <button onClick={handleCancelChanges}>Cancel Changes</button>
           </div>
         )}
 
         <div className="profile-posts">
           {posts.length > 0 ? (
-            posts.map((post) => (
+            posts.map(post => (
               <div key={post._id} className="profile-post">
-                {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />}
+                <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />
                 <p>{post.content}</p>
               </div>
             ))
@@ -150,6 +138,24 @@ const Profile = () => {
             <p className="no-posts-message">No posts to display</p>
           )}
         </div>
+
+        {showFriendsModal && (
+          <Modal onClose={() => setShowFriendsModal(false)}>
+            <div className="modal-header">
+              <h4>Friends</h4>
+            </div>
+            {friends.map(friend => (
+              <div key={friend._id} className="friend-item">
+                <img
+                  src={friend.profilePic ? `http://localhost:5050/uploads/${friend.profilePic}` : defaultPP}
+                  alt="Profile Pic"
+                  className="friend-profile-pic"
+                />
+                <p>{friend.username}</p>
+              </div>
+            ))}
+          </Modal>
+        )}
       </div>
     </>
   );
