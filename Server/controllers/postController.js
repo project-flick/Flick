@@ -114,7 +114,6 @@ exports.unlikePost = async (req, res) => {
     if (!post.likes.includes(req.user.id)) {
       return res.status(400).json({ message: 'Post not liked yet' });
     }
-
     post.likes = post.likes.filter(id => id.toString() !== req.user.id);
     await post.save();
 

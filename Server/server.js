@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
-const dbURI = 'mongodb+srv://ryan:arafeh123@flick.6cx9yrs.mongodb.net/?retryWrites=true&w=majority&appName=Flick'; // replace with your MongoDB URI
+const dbURI = process.env.MONGODB_URI;
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
