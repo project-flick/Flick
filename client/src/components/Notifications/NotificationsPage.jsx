@@ -21,7 +21,7 @@ const NotificationsPage = (props) => {
 	Fetched notifs must also contain UTC timestamp "time". 
 	Which can be calculated as relative time in frontend.
 	*/
-	const [notifications, setNotifications] = useState([
+	const [notifications] = useState([
 		{
 			user: 'John',
 			type: NotifTypes.COMMENT,
@@ -75,7 +75,7 @@ const Notification = (props) => {
 		<div className="notification">
 			<div className="notification-content-wrapper">
 				<div className="pp-wrapper">
-					<img src={defaultPP} className="pp-default"/>
+					<img src={defaultPP} className="pp-default" alt='default profile pic'/>
 				</div>
 				<div className="notification-content">
 					<span>{props.user + ' ' + content}</span>
@@ -83,7 +83,7 @@ const Notification = (props) => {
 				</div>
 			</div>
 			<div className="notification-actions">
-				{(props.type == NotifTypes.FOLLOW) && <FollowButton user={props.user} followState={FollowButtonStates.FOLLOW_BACK}/>}
+				{(props.type === NotifTypes.FOLLOW) && <FollowButton user={props.user} followState={FollowButtonStates.FOLLOW_BACK}/>}
 			</div>
 		</div>		
 	)

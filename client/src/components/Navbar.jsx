@@ -9,8 +9,9 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    setHasToken(localStorage.getItem('token') !== null);
-  }, [localStorage.getItem('token')]);
+    const token = localStorage.getItem('token');
+    setHasToken(token !== null);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');

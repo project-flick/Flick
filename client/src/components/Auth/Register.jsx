@@ -13,7 +13,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5050/api/auth/register', { username, email, password });
+      await axios.post('http://localhost:5050/api/auth/register', { username, email, password });
       alert('Registration successful');
       navigate('/login');
     } catch (err) {
@@ -34,8 +34,8 @@ const Register = () => {
       </div>
       <div className="auth-left">
         <div className="app-intro">
-          <img src={logo} className="logo"/>
-        </div>        
+          <img src={logo} className="logo" alt='logo' />
+        </div>
         <form onSubmit={handleSubmit} className="auth-form">
           <h2>Sign Up</h2>
           <input

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './Profile.scss';
 import Navbar from '../components/Navbar';
@@ -18,7 +18,7 @@ const Profile = () => {
 
   const token = localStorage.getItem('token');
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5050/api/users/profile', {
         headers: { 'x-auth-token': token },
@@ -29,9 +29,9 @@ const Profile = () => {
     } catch (err) {
       console.error('Error fetching user profile:', err);
     }
-  };
+  }, [token]);
 
-  const fetchUserPosts = async () => {
+  const fetchUserPosts = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5050/api/posts/user', {
         headers: { 'x-auth-token': token },
@@ -40,9 +40,9 @@ const Profile = () => {
     } catch (err) {
       console.error('Error fetching user posts:', err);
     }
-  };
+  }, [token]);
 
-  const fetchFollowers = async () => {
+  const fetchFollowers = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5050/api/friends/followers', {
         headers: { 'x-auth-token': token },
@@ -51,13 +51,13 @@ const Profile = () => {
     } catch (err) {
       console.error('Error fetching followers:', err);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchUserProfile();
     fetchUserPosts();
     fetchFollowers();
-  }, []);
+  }, [fetchUserProfile, fetchUserPosts, fetchFollowers]);
 
   const handleSaveChanges = async () => {
     const formData = new FormData();

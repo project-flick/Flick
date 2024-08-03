@@ -13,7 +13,7 @@ const FollowButton = (props) => {
 
 	// Calculate this button's state by checking whether props.user
 	// is following the current logged in user or not
-	const [followState, setFollowState] = useState(props.followState);
+	const [followState] = useState(props.followState);
 
 	return (
 		<button className={`follow-btn ${followState[1]} ${followState[2]?'':'active'}`}>

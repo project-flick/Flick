@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './Comments.scss';
 
@@ -6,7 +6,7 @@ const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.get(`http://localhost:5050/api/comments/post/${postId}`, {
@@ -16,11 +16,11 @@ const Comments = ({ postId }) => {
     } catch (err) {
       console.error('Error fetching comments:', err);
     }
-  };
+  }, [postId]);
 
   useEffect(() => {
     fetchComments();
-  }, [postId]);
+  }, [fetchComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import defaultPP from '../images/pp.png';
 import './Friends.scss';
@@ -9,7 +9,7 @@ const FriendsPage = () => {
   const [friends, setFriends] = useState([]);
   const token = localStorage.getItem('token');
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5050/api/friends/all', {
         headers: { 'x-auth-token': token },
@@ -18,9 +18,9 @@ const FriendsPage = () => {
     } catch (err) {
       console.error('Error fetching users:', err);
     }
-  };
+  }, [token]);
 
-  const fetchFriends = async () => {
+  const fetchFriends = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5050/api/friends', {
         headers: { 'x-auth-token': token },
@@ -29,7 +29,7 @@ const FriendsPage = () => {
     } catch (err) {
       console.error('Error fetching friends:', err);
     }
-  };
+  }, [token]);
 
   const handleFollow = async (userId) => {
     try {
@@ -68,7 +68,7 @@ const FriendsPage = () => {
   useEffect(() => {
     fetchAllUsers();
     fetchFriends();
-  }, []);
+  }, [fetchAllUsers, fetchFriends]);
 
   const isFriend = (userId) => friends.some((friend) => friend._id === userId);
 
