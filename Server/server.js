@@ -9,7 +9,12 @@ const app = express();
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}));
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -38,8 +43,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/friends', friendRoutes);
 
+// Catch-all handler to serve React's index.html for any route not covered by the API
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 const port = process.env.PORT || 5050;
