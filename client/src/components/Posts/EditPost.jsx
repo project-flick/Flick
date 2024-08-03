@@ -10,7 +10,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5050/api/posts/${id}`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${id}`, {
         headers: {
           'x-auth-token': token,
         },
@@ -26,7 +26,7 @@ const EditPost = () => {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `http://localhost:5050/api/posts/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/posts/${id}`,
         { content },
         {
           headers: {

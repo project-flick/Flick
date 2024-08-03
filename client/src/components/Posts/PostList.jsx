@@ -8,7 +8,7 @@ const PostList = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/posts', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`, {
         headers: { 'x-auth-token': token },
       });
       setPosts(res.data);

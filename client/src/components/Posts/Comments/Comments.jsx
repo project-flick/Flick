@@ -9,7 +9,7 @@ const Comments = ({ postId }) => {
   const fetchComments = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5050/api/comments/post/${postId}`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/comments/post/${postId}`, {
         headers: { 'x-auth-token': token },
       });
       setComments(res.data);
@@ -27,7 +27,7 @@ const Comments = ({ postId }) => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const res = await axios.post('http://localhost:5050/api/comments', {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/comments`, {
         userId,
         postId,
         text: commentText,

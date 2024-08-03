@@ -20,7 +20,7 @@ const Profile = () => {
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/users/profile', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
         headers: { 'x-auth-token': token },
       });
       setUser(res.data);
@@ -33,7 +33,7 @@ const Profile = () => {
 
   const fetchUserPosts = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/posts/user', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/user`, {
         headers: { 'x-auth-token': token },
       });
       setPosts(res.data);
@@ -44,7 +44,7 @@ const Profile = () => {
 
   const fetchFollowers = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/friends/followers', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/friends/followers`, {
         headers: { 'x-auth-token': token },
       });
       setFollowers(res.data);
@@ -67,7 +67,7 @@ const Profile = () => {
     if (profilePic) formData.append('profilePic', profilePic);
 
     try {
-      await axios.put('http://localhost:5050/api/users/profile', formData, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/users/profile`, formData, {
         headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' },
       });
       setEditMode(false);
@@ -92,7 +92,7 @@ const Profile = () => {
       <div className="profile-page">
         <div className="profile-header">
           {user && user.profilePic ? (
-            <img src={`http://localhost:5050/uploads/${user.profilePic}`} alt="Profile Pic" className="profile-pic" />
+            <img src={`${process.env.REACT_APP_API_URL}/uploads/${user.profilePic}`} alt="Profile Pic" className="profile-pic" />
           ) : (
             <img src={defaultPP} alt="Profile Pic" className="profile-pic pp-default" />
           )}
@@ -140,7 +140,7 @@ const Profile = () => {
           {posts.length > 0 ? (
             posts.map((post) => (
               <div key={post._id} className="profile-post">
-                <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" />
+                <img src={`${process.env.REACT_APP_API_URL}/uploads/${post.image}`} alt="Post" />
                 <p>{post.content}</p>
               </div>
             ))
@@ -156,7 +156,7 @@ const Profile = () => {
               {followers.map((follower) => (
                 <div key={follower._id} className="follower-item">
                   <img
-                    src={follower.profilePic ? `http://localhost:5050/uploads/${follower.profilePic}` : defaultPP}
+                    src={follower.profilePic ? `${process.env.REACT_APP_API_URL}/uploads/${follower.profilePic}` : defaultPP}
                     alt="Profile Pic"
                     className="follower-profile-pic"
                   />

@@ -8,7 +8,7 @@ const LikeButton = ({ postId, likes }) => {
   const handleLike = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post(`http://localhost:5050/api/likes`, { postId }, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/likes`, { postId }, {
         headers: { 'x-auth-token': token },
       });
       setLikeCount(liked ? likeCount - 1 : likeCount + 1);

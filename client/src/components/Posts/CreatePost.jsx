@@ -13,7 +13,7 @@ const CreatePost = ({ onPostCreated }) => {
     const fetchUserProfile = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('http://localhost:5050/api/users/profile', {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
           headers: { 'x-auth-token': token },
         });
         setProfilePic(res.data.profilePic);
@@ -33,7 +33,7 @@ const CreatePost = ({ onPostCreated }) => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5050/api/posts', formData, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
@@ -68,7 +68,7 @@ const CreatePost = ({ onPostCreated }) => {
       <form onSubmit={handleSubmit}>
         <div className="create-post-input">
           {profilePic ? (
-            <img src={`http://localhost:5050/uploads/${profilePic}`} alt="Profile" className="profile-pic" />
+            <img src={`${process.env.REACT_APP_API_URL}/uploads/${profilePic}`} alt="Profile" className="profile-pic" />
           ) : (
             <img src={defaultPP} alt="Profile" className="profile-pic pp-default" />
           )}

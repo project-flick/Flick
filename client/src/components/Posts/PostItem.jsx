@@ -24,14 +24,14 @@ const PostItem = ({ post }) => {
   const handleToggleLike = async () => {
     try {
       if (userHasLiked) {
-        await axios.post('http://localhost:5050/api/likes/unlike', { postId: post._id }, {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/likes/unlike`, { postId: post._id }, {
           headers: {
             'x-auth-token': token,
           },
         });
         setLikes(likes - 1);
       } else {
-        await axios.post('http://localhost:5050/api/likes/like', { postId: post._id }, {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/likes/like`, { postId: post._id }, {
           headers: {
             'x-auth-token': token,
           },
@@ -47,7 +47,7 @@ const PostItem = ({ post }) => {
 
   const fetchLikes = async () => {
     try {
-      const res = await axios.get(`http://localhost:5050/api/likes/post/${post._id}`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/likes/post/${post._id}`, {
         headers: {
           'x-auth-token': token,
         },
@@ -67,7 +67,7 @@ const PostItem = ({ post }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5050/api/posts/${post._id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/posts/${post._id}`, {
         headers: {
           'x-auth-token': token,
         },
@@ -84,7 +84,7 @@ const PostItem = ({ post }) => {
     <div className="post">
       <div className="post-header">
         {post.userId && post.userId.profilePic ? (
-          <img src={`http://localhost:5050/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
+          <img src={`${process.env.REACT_APP_API_URL}/uploads/${post.userId.profilePic}`} alt="Profile Pic" className="post-profile-pic" />
         ) : (
           <img src={defaultPP} alt="Profile Pic" className="post-profile-pic pp-default" />
         )}
@@ -102,7 +102,7 @@ const PostItem = ({ post }) => {
           )}
         </div>
       </div>
-      {post.image && <img src={`http://localhost:5050/uploads/${post.image}`} alt="Post" className="post-image" />}
+      {post.image && <img src={`${process.env.REACT_APP_API_URL}/uploads/${post.image}`} alt="Post" className="post-image" />}
       <div className="post-content">
         <div className='post-details'>
           <p>{post.content}</p>
@@ -127,7 +127,7 @@ const PostItem = ({ post }) => {
           {likesList.map((like) => (
             <div key={like._id} className="liked-user">
               <img
-                src={like.profilePic ? `http://localhost:5050/uploads/${like.profilePic}` : defaultPP}
+                src={like.profilePic ? `${process.env.REACT_APP_API_URL}/uploads/${like.profilePic}` : defaultPP}
                 alt="Profile Pic"
                 className="like-profile-pic"
               />

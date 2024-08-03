@@ -11,7 +11,7 @@ const FriendsPage = () => {
 
   const fetchAllUsers = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/friends/all', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/friends/all`, {
         headers: { 'x-auth-token': token },
       });
       setUsers(res.data);
@@ -22,7 +22,7 @@ const FriendsPage = () => {
 
   const fetchFriends = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5050/api/friends', {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/friends`, {
         headers: { 'x-auth-token': token },
       });
       setFriends(res.data);
@@ -34,7 +34,7 @@ const FriendsPage = () => {
   const handleFollow = async (userId) => {
     try {
       await axios.post(
-        'http://localhost:5050/api/friends/follow',
+        `${process.env.REACT_APP_API_URL}/api/friends/follow`,
         { userId },
         {
           headers: { 'x-auth-token': token },
@@ -51,7 +51,7 @@ const FriendsPage = () => {
   const handleUnfollow = async (userId) => {
     try {
       await axios.post(
-        'http://localhost:5050/api/friends/unfollow',
+        `${process.env.REACT_APP_API_URL}/api/friends/unfollow`,
         { userId },
         {
           headers: { 'x-auth-token': token },
@@ -81,7 +81,7 @@ const FriendsPage = () => {
           {users.map((user) => (
             <div key={user._id} className="user-item">
               <img
-                src={user.profilePic ? `http://localhost:5050/uploads/${user.profilePic}` : defaultPP}
+                src={user.profilePic ? `${process.env.REACT_APP_API_URL}/uploads/${user.profilePic}` : defaultPP}
                 alt="Profile Pic"
                 className="user-profile-pic"
               />
